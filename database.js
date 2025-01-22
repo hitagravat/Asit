@@ -25,6 +25,13 @@ function getquerybyid(queryid) {
   return data.querys.find(query => query.id == queryid);
 }
 
+function resolvedquerybyid(queryid) {
+  let query = getquerybyid(queryid);
+  query.resolved = true;
+  return query;
+}
+
+
 /* User Data */
 function adduser(fullname, email, password) {
   let user = {
@@ -55,6 +62,7 @@ module.exports = {
   getusers,
   getquerys,
   getquerybyid,
+  resolvedquerybyid,
   addquery,
   adduser,
   getuserbyid,

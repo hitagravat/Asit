@@ -14,8 +14,15 @@ app.get("/", (req, res) => {
 });
 
 app.get("/querys", (req, res) => {
+  let filterresolved = req.query.resolved;
+  let querys = database.getquerys();
+  
+  if (filterresolved) {
+    querys = querys.filter(query => query.resolved == filterresolved);
+  }
+  
   res.json({
-    result: database.getquerys(),
+    result: querys,
     success: true,
   });
 });
@@ -56,6 +63,25 @@ app.post("/querys", (req, res) => {
       success: true,
     };
     res.status(200).json(payload);
+  }
+});
+
+app.post("/querys/resolve/:id", (req, res) => {
+  const queryid = req.params.id;
+  const query = database.resolvedquerybyid(queryid);
+
+  if (query) {
+    let payload = {
+      result: query,
+      success: true,
+    };
+    res.json(payload);
+  } else {
+    let payload = {
+      message: "Query not found!!",
+      success: false,
+    };
+    res.status(404).json(payload);
   }
 });
 
