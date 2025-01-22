@@ -4,24 +4,28 @@ const data = {
   users: []
 }
 
-function getquerys() {
-  return [...data.querys];
-}
 
-function getquerybyid(queryid) {
-   return data.querys.find(query => query.id == queryid);
-}
-
+/* Query Data */
 function addquery(fullname, mobileno, message) {
   let query = {
     id: uid++,
     fullname: fullname,
     mobileno: mobileno,
     message: message,
+    resolved: false
   }
   data.querys.push(query);
 }
 
+function getquerys() {
+  return [...data.querys];
+}
+
+function getquerybyid(queryid) {
+  return data.querys.find(query => query.id == queryid);
+}
+
+/* User Data */
 function adduser(fullname, email, password) {
   let user = {
     id: uid++,
@@ -45,6 +49,7 @@ function getuserbyemail(useremail) {
   let user = data.users.find(user => user.id == useremail);
   return user;
 }
+
 
 module.exports = {
   getusers,
