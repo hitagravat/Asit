@@ -4,20 +4,35 @@ const data = {
   users: []
 }
 
-function getquerys() {
-  return [...data.querys];
-}
 
+/* Query Data */
 function addquery(fullname, mobileno, message) {
   let query = {
     id: uid++,
     fullname: fullname,
     mobileno: mobileno,
     message: message,
+    resolved: false
   }
   data.querys.push(query);
 }
 
+function getquerys() {
+  return [...data.querys];
+}
+
+function getquerybyid(queryid) {
+  return data.querys.find(query => query.id == queryid);
+}
+
+function resolvedquerybyid(queryid) {
+  let query = getquerybyid(queryid);
+  query.resolved = true;
+  return query;
+}
+
+
+/* User Data */
 function adduser(fullname, email, password) {
   let user = {
     id: uid++,
@@ -32,19 +47,22 @@ function getusers() {
   return [...data.users];
 }
 
-function getuserbyid(searchid) {
-  let user = data.users.find(user => user.id == searchid);
+function getuserbyid(userid) {
+  let user = data.users.find(user => user.id == userid);
   return user;
 }
 
-function getuserbyemail(searchemail) {
-  let user = data.users.find(user => user.id == searchemail);
+function getuserbyemail(useremail) {
+  let user = data.users.find(user => user.id == useremail);
   return user;
 }
+
 
 module.exports = {
   getusers,
   getquerys,
+  getquerybyid,
+  resolvedquerybyid,
   addquery,
   adduser,
   getuserbyid,
