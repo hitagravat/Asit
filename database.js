@@ -57,6 +57,26 @@ function getuserbyemail(useremail) {
   return user;
 }
 
+function updateuserbyid(userid, newuser) {
+  let user = getuserbyid(userid);
+  if (user) {
+    user = { ...user, ...newuser };
+    return user;
+  } else {
+    return null;
+  }
+}
+
+function deleteuserbyid(userid) {
+  let user = getuserbyid(userid);
+  if (user) {
+    data.users = data.users.filter(user => user.id != userid);
+    return user;
+  } else {
+    return null;
+  }
+}
+
 
 module.exports = {
   getusers,
@@ -66,5 +86,7 @@ module.exports = {
   addquery,
   adduser,
   getuserbyid,
-  getuserbyemail
+  getuserbyemail,
+  updateuserbyid,
+  deleteuserbyid
 };
