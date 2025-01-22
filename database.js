@@ -60,10 +60,8 @@ function getuserbyemail(useremail) {
 function updateuserbyid(userid, newuser) {
   let user = getuserbyid(userid);
   if (user) {
-    user = { ...user, ...newuser };
+    user = { ...newuser, id: userid };
     return user;
-  } else {
-    return null;
   }
 }
 
@@ -72,8 +70,6 @@ function deleteuserbyid(userid) {
   if (user) {
     data.users = data.users.filter(user => user.id != userid);
     return user;
-  } else {
-    return null;
   }
 }
 
