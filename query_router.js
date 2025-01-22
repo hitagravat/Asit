@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
+const database = require("./database");
+
 // Get all the querys
 router.get("/", (req, res) => {
   let filterresolved = req.query.resolved;
