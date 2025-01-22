@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const database = require("./database");
+const auth_router = require("./auth_router");
 const user_router = require("./user_router");
 const query_router = require("./query_router");
 
@@ -23,6 +24,7 @@ app.get("/health", (req, res) => {
   });
 });
 
+app.use("/auth", auth_router);
 app.use("/users", user_router);
 app.use("/querys", query_router);
 
