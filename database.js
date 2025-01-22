@@ -8,6 +8,10 @@ function getquerys() {
   return [...data.querys];
 }
 
+function getquerybyid(queryid) {
+   return data.querys.find(query => query.id == queryid);
+}
+
 function addquery(fullname, mobileno, message) {
   let query = {
     id: uid++,
@@ -32,19 +36,20 @@ function getusers() {
   return [...data.users];
 }
 
-function getuserbyid(searchid) {
-  let user = data.users.find(user => user.id == searchid);
+function getuserbyid(userid) {
+  let user = data.users.find(user => user.id == userid);
   return user;
 }
 
-function getuserbyemail(searchemail) {
-  let user = data.users.find(user => user.id == searchemail);
+function getuserbyemail(useremail) {
+  let user = data.users.find(user => user.id == useremail);
   return user;
 }
 
 module.exports = {
   getusers,
   getquerys,
+  getquerybyid,
   addquery,
   adduser,
   getuserbyid,

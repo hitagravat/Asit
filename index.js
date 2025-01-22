@@ -20,6 +20,23 @@ app.get("/querys", (req, res) => {
   });
 });
 
+app.get("/querys/:id", (req, res) => {
+  const queryid = req.params.id;
+  const query = database.getquerybyid(queryid);
+
+  if (query) {
+    res.json({
+      result: query,
+      success: true,
+    });
+  } else {
+    res.status(404).json({
+      message: "Query not found!!",
+      success: false,
+    });
+  }
+});
+
 app.post("/querys", (req, res) => {
   let fullname = req.body.fullname;
   let mobileno = req.body.mobileno;
