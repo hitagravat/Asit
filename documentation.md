@@ -43,4 +43,39 @@ In this file, You will the documentation of api & database.
 
 ##  DATABASE SCHEME
 
-`comming-soon`
+### query
+
+| Columns  | Datatype    | Constrains        |
+| -------- | ----------- | ----------------- |
+| id       | integer     | primary-key       |
+| fullname | string      | not-null          |
+| mobileno | integer(10) | not-null          |
+| message  | string      | not-null          |
+| resolved | boolean     | default(false)    |
+
+### users
+
+| Columns  | Datatype    | Constrains        |
+| -------- | ----------- | ----------------- |
+| id       | integer     | primary-key       |
+| fullname | string      | not-null          |
+| email    | string      | unique & not-null |
+| password | string      | not-null          |
+
+### news
+
+| Columns  | Datatype    | Constrains        |
+| -------- | ----------- | ----------------- |
+| id       | integer     | primary-key       |
+| title    | string      | not-null          |
+| desc     | string      | not-null          |
+
+## admission
+
+| Columns    | Datatype    | Constrains        |
+| ---------- | ----------- | ----------------- |
+| id         | integer     | primary-key       |
+| fullname   | string      | not-null          |
+| mobileno   | integer(10) | not-null          |
+| course     | string      | not-null          |
+| registerat | string      | not-null          |
