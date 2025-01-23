@@ -15,6 +15,7 @@ function addquery(fullname, mobileno, message) {
     resolved: false
   }
   data.querys.push(query);
+  return query;
 }
 
 function getquerys() {
@@ -41,6 +42,7 @@ function adduser(fullname, email, password) {
     password: password
   }
   data.users.push(user);
+  return user;
 }
 
 function getusers() {
@@ -77,9 +79,9 @@ function deleteuserbyid(userid) {
 module.exports = {
   getusers,
   getquerys,
+  addquery,
   getquerybyid,
   resolvedquerybyid,
-  addquery,
   adduser,
   getuserbyid,
   getuserbyemail,
