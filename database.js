@@ -2,6 +2,7 @@ let uid = 1;
 const data = {
   querys: [],
   users: [],
+  admissions: [],
   news: []
 }
 
@@ -105,11 +106,35 @@ function deletenewsbyid(newsid) {
   }
 }
 
+/* Admission Data */
+function addadmission(fullname, mobileno, course) {
+  let date = new Date().getDate() + "/" + (new Date().getMonth() + 1) + "/" + new Date().getFullYear();
+  
+  let admission = {
+    id: uid++,
+    fullname: fullname,
+    mobileno: mobileno,
+    course: course,
+    registerat: date
+  }
+  data.admissions.push(admission);
+  return admission;
+}
+
+function getadmission() {
+  return [...data.admissions];
+}
+
+function getadmissionbyid(admissionid) {
+  let admission = data.admissions.find(admission => admission.id == admissionid);
+  return admission;
+}
 
 module.exports = {
   getusers,
   getquerys,
   getnews,
+  getadmission,
   addquery,
   getquerybyid,
   resolvedquerybyid,
@@ -120,5 +145,7 @@ module.exports = {
   deleteuserbyid,
   addnews,
   getnewsbyid,
-  deletenewsbyid
+  deletenewsbyid,
+  addadmission,
+  getadmissionbyid
 };
