@@ -20,6 +20,12 @@
       fetch("/api/news")
         .then(res => res.json())
         .then(data => {
+          if (data.result.length == 0) {
+            document.querySelector(".news-list").innerHTML =
+              "<p>No news available</p>";
+            return undefined;
+          }
+          
           const newsList = document.querySelector(".news-list");
           data.result.forEach((news) => {
             const newsDiv = document.createElement("div");
