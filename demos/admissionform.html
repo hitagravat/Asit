@@ -1,0 +1,32 @@
+<html>
+  <head>
+    <title>Admission Form Demo</title>
+  </head>
+
+  <body>
+    <h1>Admission Form</h1>
+
+    <form action="/api/admission/register" method="POST">
+      <div>
+        <label for="fullname">FullName:</label>
+        <input type="text" name="fullname" />
+      </div>
+      <div>
+        <label for="mobileno">MobileNo:</label>
+        <input type="text" name="mobileno" />
+      </div>
+      <div>
+        <label for="course">Course:</label>
+        <select name="course" />
+          <option value="computer">Diploma Computer</option>
+          <option value="civil">Diploma Civil</option>
+          <option value="mechanical">Diploma Mechanical</option>
+          <option value="electrical">Diploma Electrical</option>
+        </select>
+      </div>
+      <div>
+        <input type="submit" value="Login" />
+      </div>
+    </form>
+  </body>
+</html>
