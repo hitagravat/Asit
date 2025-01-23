@@ -25,7 +25,7 @@ router.post("/signup", (req, res) => {
       success: true,
     };
     
-    res.cookie("token", token);
+    res.cookie("access-token", token);
     res.status(200).json(payload);
   }
 });
@@ -51,7 +51,7 @@ router.post("/login", (req, res) => {
         success: true,
       };
       
-      res.cookie("token", token);
+      res.cookie("access-token", token);
       res.status(200).json(payload);
     } else {
       let payload = {
@@ -65,7 +65,7 @@ router.post("/login", (req, res) => {
 });
 
 router.get("/logout", (req, res) => {
-  res.clearCookie("token");
+  res.clearCookie("access-token");
   res.status(200).json({
     message: "Logout successfully!!",
     success: true,
