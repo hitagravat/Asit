@@ -8,6 +8,7 @@ const user_router = require("./user_router");
 const query_router = require("./query_router");
 const news_router = require("./news_router");
 const admission_router = require("./admission_router");
+const swaggerDocs = require("./swagger");
 
 const app = express();
 app.use(bodyParser.json());
@@ -54,4 +55,6 @@ app.use("/api/admission", admission_router);
 app.listen(PORT, () => {
   console.log("Express server start at port: ", PORT);
   console.log(`http://localhost:${PORT}`);
+
+  swaggerDocs(app);
 });
