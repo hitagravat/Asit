@@ -17,16 +17,16 @@ app.get("/", (req, res) => {
   res.redirect("/queryform.html");
 });
 
-app.get("/health", (req, res) => {
+app.get("/api/health", (req, res) => {
   res.status(200).json({
     message: "Healthy Service!!",
     success: true,
   });
 });
 
-app.use("/auth", auth_router);
-app.use("/users", user_router);
-app.use("/querys", query_router);
+app.use("/api/auth", auth_router);
+app.use("/api/users", user_router);
+app.use("/api/querys", query_router);
 
 app.listen(PORT, () => {
   console.log("Express server start at port: ", PORT);
