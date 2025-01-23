@@ -5,7 +5,11 @@ const database = require("./database");
 
 // Get all the latest news
 router.get("/", (req, res) => {
-  
+  let news = database.getnews();
+  res.json({
+    result: news,
+    success: true,
+  });
 });
 
 // Create a new news
@@ -25,6 +29,16 @@ router.post("/", (req, res) => {
       success: true,
     });
   }
+});
+
+// Delete a news by id
+router.delete("/:id", (req, res) => {
+  const newsid = req.params.id;
+  const news = database.deletenewsbyid(newsid);
+  res.json({
+    result: news,
+    success: true,
+  });
 });
 
 module.exports = router;

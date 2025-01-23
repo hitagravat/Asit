@@ -47,7 +47,7 @@ app.get("/api/profile", (req, res) => {
 app.use("/api/auth", auth_router);
 app.use("/api/users", user_router);
 app.use("/api/querys", query_router);
-app.uuse("/api/news", news_router);
+app.use("/api/news", news_router);
 
 app.listen(PORT, () => {
   console.log("Express server start at port: ", PORT);
