@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 
 const utils = require("./utils");
 const database = require("./database");
@@ -14,21 +15,17 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("demos"));
+app.use(cors());
 
 const PORT = process.env.PORT || 8080;
 
 /**
  * @openapi
- * /:
+ * '/':
  *   get:
  *     tags:
  *       - Basic/Default
  *     description: returns the home page
- *     responses:
- *       200:
- *         description: Home page
- *         content:
- *           text/html:
  */
 app.get("/", (req, res) => {
   res.redirect("/index.html");
@@ -36,7 +33,7 @@ app.get("/", (req, res) => {
 
 /**
  * @openapi
- * api/health:
+ * 'api/health':
  *   get:
  *     tags:
  *       - Basic/Default
@@ -47,14 +44,6 @@ app.get("/", (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Healthy"
- *                 success:
- *                   type: boolean
- *                   example: true
  */
 app.get("/api/health", (req, res) => {
   res.status(200).json({
@@ -65,7 +54,7 @@ app.get("/api/health", (req, res) => {
 
 /**
  * @openapi
- * api/profile:
+ * 'api/profile':
  *   get:
  *     tags:
  *       - Users
@@ -76,31 +65,11 @@ app.get("/api/health", (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 result:
- *                   type: object
- *                   example:
- *                     id: 1
- *                     fullname: "asit"
- *                     email: "asit@example.com"
- *                     password: "asit"
- *                 success:
- *                   type: boolean
- *                   example: true
  *       401:
  *         description: unauthorized
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Unauthorized!"
- *                 success:
- *                   type: boolean
- *                   example: false
  */
 app.get("/api/profile", (req, res) => {
   let token = req.cookies?.["access-token"];
