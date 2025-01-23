@@ -26,7 +26,7 @@ app.get("/api/health", (req, res) => {
 });
 
 app.get("/api/profile", (req, res) => {
-  let token = req.cookies["access-token"];
+  let token = req.cookies?.["access-token"];
   let user = utils.verifyanddecodetoken(token);
 
   if (user) {
