@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <title>News</title>
+  </head>
+
+  <body>
+    <h1>News</h1>
+
+    <div class="news-list">
+      <!--
+      <div class="news">
+        <h2 class="news-title">News Title</h2>
+        <p class="news-content">News Content</p>
+      </div>
+      -->
+    </div>
+
+    <script>
+       // this fetch the news and renders it.
+      fetch("/api/news")
+        .then(res => res.json())
+        .then(data => {
+          const newsList = document.querySelector(".news-list");
+          data.result.forEach((news) => {
+            const newsDiv = document.createElement("div");
+            newsDiv.classList.add("news");
+
+            const title = document.createElement("h2");
+            title.classList.add("news-title");
+            title.textContent = news.title;
+
+            const content = document.createElement("p");
+            content.classList.add("news-content");
+            content.textContent = news.content;
+
+            newsDiv.appendChild(title);
+            newsDiv.appendChild(content);
+
+            newsList.appendChild(newsDiv);
+          });
+        });
+    </script>
+  </body>
+</html>
