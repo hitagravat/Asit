@@ -2,6 +2,16 @@
 
 In this file, You will the documentation of api & database.
 
+## DotEnv File
+
+below given is example `.env` file,
+please edit it to suit your need.
+
+```
+PORT=8080
+JWT_ACCESS_SECRET=testsecret
+```
+
 ## API DOCS
 
 ### Basic Paths
@@ -68,7 +78,7 @@ In this file, You will the documentation of api & database.
 | -------- | ----------- | ----------------- |
 | id       | integer     | primary-key       |
 | title    | string      | not-null          |
-| desc     | string      | not-null          |
+| content  | string      | not-null          |
 
 ## admission
 
