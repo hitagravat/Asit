@@ -17,10 +17,45 @@ app.use(express.static("demos"));
 
 const PORT = process.env.PORT || 8080;
 
+/**
+ * @openapi
+ * /:
+ *   get:
+ *     tags:
+ *       - Basic/Default
+ *     description: returns the home page
+ *     responses:
+ *       200:
+ *         description: Home page
+ *         content:
+ *           text/html:
+ */
 app.get("/", (req, res) => {
   res.redirect("/index.html");
 });
 
+/**
+ * @openapi
+ * api/health:
+ *   get:
+ *     tags:
+ *       - Basic/Default
+ *     description: a simple health check route
+ *     responses:
+ *       200:
+ *         description: retuns a simple message
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Healthy"
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ */
 app.get("/api/health", (req, res) => {
   res.status(200).json({
     message: "Healthy Service!!",
@@ -28,6 +63,45 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+/**
+ * @openapi
+ * api/profile:
+ *   get:
+ *     tags:
+ *       - Users
+ *     description: returns the user profile
+ *     responses:
+ *       200:
+ *         description: retuns the user profile
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 result:
+ *                   type: object
+ *                   example:
+ *                     id: 1
+ *                     fullname: "asit"
+ *                     email: "asit@example.com"
+ *                     password: "asit"
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *       401:
+ *         description: unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Unauthorized!"
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ */
 app.get("/api/profile", (req, res) => {
   let token = req.cookies?.["access-token"];
   let user = utils.verifyanddecodetoken(token);
@@ -53,8 +127,6 @@ app.use("/api/news", news_router);
 app.use("/api/admission", admission_router);
 
 app.listen(PORT, () => {
-  console.log("Express server start at port: ", PORT);
-  console.log(`http://localhost:${PORT}`);
-
-  swaggerDocs(app);
+  console.log(`Express server start at: http://localhost:${PORT}`);
+  swaggerDocs(app, PORT);
 });
