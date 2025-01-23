@@ -1,7 +1,8 @@
 let uid = 1;
 const data = {
   querys: [],
-  users: []
+  users: [],
+  news: []
 }
 
 
@@ -76,9 +77,39 @@ function deleteuserbyid(userid) {
 }
 
 
+/* News data */
+function addnews(title, content) {
+  let news = {
+    id: uid++,
+    title: title,
+    content: content
+  }
+  data.news.push(news);
+  return news;
+}
+
+function getnews() {
+  return [...data.news];
+}
+
+function getnewsbyid(newid) {
+  let news = data.news.find(news => news.id == newid);
+  return news;
+}
+
+function deletenewsbyid(newsid) {
+  let news = getnewsbyid(newsid);
+  if (news) {
+    data.news = data.news.filter(news => news.id != newsid);
+    return news;
+  }
+}
+
+
 module.exports = {
   getusers,
   getquerys,
+  getnews,
   addquery,
   getquerybyid,
   resolvedquerybyid,
@@ -86,5 +117,8 @@ module.exports = {
   getuserbyid,
   getuserbyemail,
   updateuserbyid,
-  deleteuserbyid
+  deleteuserbyid,
+  addnews,
+  getnewsbyid,
+  deletenewsbyid
 };

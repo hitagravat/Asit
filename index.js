@@ -6,6 +6,7 @@ const database = require("./database");
 const auth_router = require("./auth_router");
 const user_router = require("./user_router");
 const query_router = require("./query_router");
+const news_router = require("./news_router");
 
 const app = express();
 app.use(bodyParser.json());
@@ -46,6 +47,7 @@ app.get("/api/profile", (req, res) => {
 app.use("/api/auth", auth_router);
 app.use("/api/users", user_router);
 app.use("/api/querys", query_router);
+app.uuse("/api/news", news_router);
 
 app.listen(PORT, () => {
   console.log("Express server start at port: ", PORT);
