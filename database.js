@@ -1,7 +1,8 @@
 let uid = 1;
 const data = {
   querys: [],
-  users: []
+  users: [],
+  news: []
 }
 
 
@@ -15,6 +16,7 @@ function addquery(fullname, mobileno, message) {
     resolved: false
   }
   data.querys.push(query);
+  return query;
 }
 
 function getquerys() {
@@ -41,6 +43,7 @@ function adduser(fullname, email, password) {
     password: password
   }
   data.users.push(user);
+  return user;
 }
 
 function getusers() {
@@ -57,14 +60,65 @@ function getuserbyemail(useremail) {
   return user;
 }
 
+function updateuserbyid(userid, newuser) {
+  let user = getuserbyid(userid);
+  if (user) {
+    user = { ...newuser, id: userid };
+    return user;
+  }
+}
+
+function deleteuserbyid(userid) {
+  let user = getuserbyid(userid);
+  if (user) {
+    data.users = data.users.filter(user => user.id != userid);
+    return user;
+  }
+}
+
+
+/* News data */
+function addnews(title, content) {
+  let news = {
+    id: uid++,
+    title: title,
+    content: content
+  }
+  data.news.push(news);
+  return news;
+}
+
+function getnews() {
+  return [...data.news];
+}
+
+function getnewsbyid(newid) {
+  let news = data.news.find(news => news.id == newid);
+  return news;
+}
+
+function deletenewsbyid(newsid) {
+  let news = getnewsbyid(newsid);
+  if (news) {
+    data.news = data.news.filter(news => news.id != newsid);
+    return news;
+  }
+}
+
 
 module.exports = {
   getusers,
   getquerys,
+  getnews,
+  addquery,
   getquerybyid,
   resolvedquerybyid,
-  addquery,
   adduser,
   getuserbyid,
-  getuserbyemail
+  getuserbyemail,
+  updateuserbyid,
+  deleteuserbyid,
+  addnews,
+  getnewsbyid,
+  deletenewsbyid
 };
