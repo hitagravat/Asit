@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 
+const utils = require("./utils");
 const database = require("./database");
 const auth_router = require("./auth_router");
 const user_router = require("./user_router");
@@ -22,6 +23,24 @@ app.get("/api/health", (req, res) => {
     message: "Healthy Service!!",
     success: true,
   });
+});
+
+app.get("/api/profile", (req, res) => {
+  let token = req.cookies["access-token"];
+  let user = utils.verifyanddecodetoken(token);
+
+  if (user) {
+    user = database.getuserbyid(user.userid);
+    res.json({
+      result: user,
+      success: true,
+    });
+  } else {
+    res.status(401).json({
+      message: "Unauthorized!!",
+      success: false,
+    });
+  }
 });
 
 app.use("/api/auth", auth_router);
