@@ -1,133 +1,82 @@
-let uid = 1;
-const data = {
-  querys: [],
-  users: [],
-  admissions: [],
-  news: []
+const { runAsync, getAsync, allAsync } = require("./db");
+
+async function addquery(fullname, mobileno, message) {
+  const sql = `INSERT INTO query (fullname, mobileno, message) VALUES (?, ?, ?)`;
+  const result = await runAsync(sql, [fullname, mobileno, message]);
+  return { id: result.id, fullname, mobileno, message, resolved: false };
 }
 
-
-/* Query Data */
-function addquery(fullname, mobileno, message) {
-  let query = {
-    id: uid++,
-    fullname: fullname,
-    mobileno: mobileno,
-    message: message,
-    resolved: false
-  }
-  data.querys.push(query);
-  return query;
+async function getquerys() {
+  const sql = `SELECT * FROM query`;
+  return await allAsync(sql);
 }
 
-function getquerys() {
-  return [...data.querys];
+async function getquerybyid(queryid) {
+  const sql = `SELECT * FROM query WHERE id = ?`;
+  return await getAsync(sql, [queryid]);
 }
 
-function getquerybyid(queryid) {
-  return data.querys.find(query => query.id == queryid);
+async function resolvedquerybyid(queryid) {
+  const sql = `UPDATE query SET resolved = 1 WHERE id = ?`;
+  await runAsync(sql, [queryid]);
+  return { id: queryid, resolved: true };
 }
 
-function resolvedquerybyid(queryid) {
-  let query = getquerybyid(queryid);
-  query.resolved = true;
-  return query;
+async function adduser(fullname, email, password) {
+  const sql = `INSERT INTO user (fullname, email, password) VALUES (?, ?, ?)`;
+  const result = await runAsync(sql, [fullname, email, password]);
+  return { id: result.id, fullname, email, password };
 }
 
-
-/* User Data */
-function adduser(fullname, email, password) {
-  let user = {
-    id: uid++,
-    fullname: fullname,
-    email: email,
-    password: password
-  }
-  data.users.push(user);
-  return user;
+async function getusers() {
+  const sql = `SELECT * FROM user`;
+  return await allAsync(sql);
 }
 
-function getusers() {
-  return [...data.users];
+async function getuserbyid(userid) {
+  const sql = `SELECT * FROM user WHERE id = ?`;
+  return await getAsync(sql, [userid]);
 }
 
-function getuserbyid(userid) {
-  let user = data.users.find(user => user.id == userid);
-  return user;
+async function updateuserbyid(userid, newuser) {
+  const sql = `UPDATE user SET fullname = ?, email = ?, password = ? WHERE id = ?`;
+  await runAsync(sql, [newuser.fullname, newuser.email, newuser.password, userid]);
+  return { id: userid, ...newuser };
 }
 
-function getuserbyemail(useremail) {
-  let user = data.users.find(user => user.id == useremail);
-  return user;
+async function deleteuserbyid(userid) {
+  const sql = `DELETE FROM user WHERE id = ?`;
+  await runAsync(sql, [userid]);
+  return { id: userid };
 }
 
-function updateuserbyid(userid, newuser) {
-  let user = getuserbyid(userid);
-  if (user) {
-    user = { ...newuser, id: userid };
-    return user;
-  }
+async function addnews(title, content) {
+  const sql = `INSERT INTO news (title, content) VALUES (?, ?)`;
+  const result = await runAsync(sql, [title, content]);
+  return { id: result.id, title, content };
 }
 
-function deleteuserbyid(userid) {
-  let user = getuserbyid(userid);
-  if (user) {
-    data.users = data.users.filter(user => user.id != userid);
-    return user;
-  }
+async function getnews() {
+  const sql = `SELECT * FROM news`;
+  return await allAsync(sql);
 }
 
-
-/* News data */
-function addnews(title, content) {
-  let news = {
-    id: uid++,
-    title: title,
-    content: content
-  }
-  data.news.push(news);
-  return news;
+async function deletenewsbyid(newsid) {
+  const sql = `DELETE FROM news WHERE id = ?`;
+  await runAsync(sql, [newsid]);
+  return { id: newsid };
 }
 
-function getnews() {
-  return [...data.news];
+async function addadmission(fullname, mobileno, course) {
+  const date = new Date().toISOString().split('T')[0];
+  const sql = `INSERT INTO admission (fullname, mobileno, course, registerat) VALUES (?, ?, ?, ?)`;
+  const result = await runAsync(sql, [fullname, mobileno, course, date]);
+  return { id: result.id, fullname, mobileno, course, registerat: date };
 }
 
-function getnewsbyid(newid) {
-  let news = data.news.find(news => news.id == newid);
-  return news;
-}
-
-function deletenewsbyid(newsid) {
-  let news = getnewsbyid(newsid);
-  if (news) {
-    data.news = data.news.filter(news => news.id != newsid);
-    return news;
-  }
-}
-
-/* Admission Data */
-function addadmission(fullname, mobileno, course) {
-  let date = new Date().getDate() + "/" + (new Date().getMonth() + 1) + "/" + new Date().getFullYear();
-  
-  let admission = {
-    id: uid++,
-    fullname: fullname,
-    mobileno: mobileno,
-    course: course,
-    registerat: date
-  }
-  data.admissions.push(admission);
-  return admission;
-}
-
-function getadmission() {
-  return [...data.admissions];
-}
-
-function getadmissionbyid(admissionid) {
-  let admission = data.admissions.find(admission => admission.id == admissionid);
-  return admission;
+async function getadmission() {
+  const sql = `SELECT * FROM admission`;
+  return await allAsync(sql);
 }
 
 module.exports = {
@@ -140,12 +89,9 @@ module.exports = {
   resolvedquerybyid,
   adduser,
   getuserbyid,
-  getuserbyemail,
   updateuserbyid,
   deleteuserbyid,
   addnews,
-  getnewsbyid,
   deletenewsbyid,
-  addadmission,
-  getadmissionbyid
+  addadmission
 };
