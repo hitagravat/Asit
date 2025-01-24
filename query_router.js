@@ -4,9 +4,9 @@ const router = express.Router();
 const database = require("./database");
 
 // Get all the querys
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
   let filterresolved = req.query.resolved;
-  let querys = database.getquerys();
+  let querys = await database.getquerys();
   
   if (filterresolved) {
     querys = querys.filter(query => query.resolved == filterresolved);
@@ -19,9 +19,9 @@ router.get("/", (req, res) => {
 });
 
 // Get a single query by id
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   const queryid = req.params.id;
-  const query = database.getquerybyid(queryid);
+  const query = await database.getquerybyid(queryid);
 
   if (query) {
     res.json({
@@ -37,7 +37,7 @@ router.get("/:id", (req, res) => {
 });
 
 // Create a new query
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   let fullname = req.body.fullname;
   let mobileno = req.body.mobileno;
   let message = req.body.message;
@@ -49,7 +49,7 @@ router.post("/", (req, res) => {
     };
     res.status(400).json(payload);
   } else {
-    database.addquery(fullname, mobileno, message);
+    await database.addquery(fullname, mobileno, message);
 
     let payload = {
       message: "Thank you for your message",
@@ -60,9 +60,9 @@ router.post("/", (req, res) => {
 });
 
 // Resolved a query
-router.post("/resolve/:id", (req, res) => {
+router.post("/resolve/:id", async (req, res) => {
   const queryid = req.params.id;
-  const query = database.resolvedquerybyid(queryid);
+  const query = await database.resolvedquerybyid(queryid);
 
   if (query) {
     let payload = {

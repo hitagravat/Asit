@@ -4,8 +4,8 @@ const router = express.Router();
 const database = require("./database");
 
 // Get all the users
-router.get("/", (req, res) => {
-  let users = database.getusers();
+router.get("/", async (req, res) => {
+  let users = await database.getusers();
   
   res.json({
     result: users,
@@ -14,9 +14,9 @@ router.get("/", (req, res) => {
 });
 
 // Get user by id
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   const userid = req.params.id;
-  const user = database.getuserbyid(userid);
+  const user = await database.getuserbyid(userid);
 
   if (user) {
     res.json({
@@ -32,10 +32,10 @@ router.get("/:id", (req, res) => {
 });
 
 // Update user by id
-router.put("/:id", (req, res) => {
+router.put("/:id", async (req, res) => {
   let userid = req.params.id;
   let newuser = req.body;
-  let user = database.updateuserbyid(userid, newuser);
+  let user = await database.updateuserbyid(userid, newuser);
   
   if (user) {
     res.json({
@@ -51,9 +51,9 @@ router.put("/:id", (req, res) => {
 });
 
 // Delete user by id
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   let userid = req.params.id;
-  let user = database.deleteuserbyid(userid);
+  let user = await database.deleteuserbyid(userid);
   return res.json({
     result: user,
     success: true,

@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 const express = require("express");
+var cookieParser = require('cookie-parser');
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
@@ -14,10 +15,11 @@ const admission_router = require("./admission_router");
 const swaggerDocs = require("./swagger");
 
 const app = express();
+app.use(cors());
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("demos"));
-app.use(cors());
 
 const PORT = process.env.PORT || 8080;
 
@@ -29,7 +31,7 @@ const PORT = process.env.PORT || 8080;
  *       - Basic/Default
  *     description: returns the home page
  */
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
   res.redirect("/index.html");
 });
 
@@ -47,7 +49,7 @@ app.get("/", (req, res) => {
  *           application/json:
  *             schema:
  */
-app.get("/api/health", (req, res) => {
+app.get("/api/health", async (req, res) => {
   res.status(200).json({
     message: "Healthy Service!!",
     success: true,
@@ -73,22 +75,24 @@ app.get("/api/health", (req, res) => {
  *           application/json:
  *             schema:
  */
-app.get("/api/profile", (req, res) => {
-  let token = req.cookies?.["access-token"];
-  let user = utils.verifyanddecodetoken(token);
-
-  if (user) {
-    user = database.getuserbyid(user.userid);
-    res.json({
-      result: user,
-      success: true,
-    });
-  } else {
-    res.status(401).json({
-      message: "Unauthorized!!",
-      success: false,
-    });
+app.get("/api/profile", async (req, res) => {
+  let token = req.cookies["access-token"];
+  
+  if (!token) {
+    return res.redirect("/login.html");
   }
+  
+  let user = utils.verifyanddecodetoken(token);
+  if (!user) {
+    res.clearCookie("access-token");
+    return res.redirect("/login.html");
+  }
+  
+  user = await database.getuserbyid(user.userid);
+  return res.json({
+    result: user,
+    success: true,
+  });
 });
 
 app.use("/api/auth", auth_router);

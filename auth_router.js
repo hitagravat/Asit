@@ -4,7 +4,7 @@ const router = express.Router();
 const database = require("./database");
 const utils = require("./utils");
 
-router.post("/signup", (req, res) => {
+router.post("/signup", async (req, res) => {
   let fullname = req.body.fullname;
   let email = req.body.email;
   let password = req.body.password;
@@ -12,21 +12,21 @@ router.post("/signup", (req, res) => {
   if (fullname == "" || email == "" || password == "") {
     res.redirect("/signup.html");
   } else {
-    let user = database.adduser(fullname, email, password);
+    let user = await database.adduser(fullname, email, password);
     let token = utils.generatetoken(user.id, user.email);
     res.cookie("access-token", token);
     res.redirect("/");
   }
 });
 
-router.post("/login", (req, res) => {
+router.post("/login", async (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
 
   if (email == "" || password == "") {
     res.redirect("/login.html");
   } else {
-    let user = database.getuserbyemail(email);
+    let user = await database.getuserbyemail(email);
     let token = utils.generatetoken(user.id, user.email);
     
     if (user && user.password == password) {
@@ -38,7 +38,7 @@ router.post("/login", (req, res) => {
   }
 });
 
-router.get("/logout", (req, res) => {
+router.get("/logout", async (req, res) => {
   res.clearCookie("access-token");
   res.redirect("/login.html");
 });
