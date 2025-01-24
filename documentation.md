@@ -10,6 +10,7 @@ please edit it to suit your need.
 ```
 PORT=8080
 JWT_ACCESS_SECRET=testsecret
+DB_PATH=./mydatabase.sqlite
 ```
 
 ## API DOCS
