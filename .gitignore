@@ -1,6 +1,7 @@
 # Project Specific
 /generated-icon.png
-replit.nix
+/replit.nix
+/data
 
 # Logs
 logs
