@@ -38,6 +38,11 @@ async function getuserbyid(userid) {
   return await getAsync(sql, [userid]);
 }
 
+async function getuserbyemail(useremail) {
+  const sql = `SELECT * FROM user WHERE email = ?`;
+  return await getAsync(sql, [useremail]);
+}
+
 async function updateuserbyid(userid, newuser) {
   const sql = `UPDATE user SET fullname = ?, email = ?, password = ? WHERE id = ?`;
   await runAsync(sql, [newuser.fullname, newuser.email, newuser.password, userid]);
@@ -89,6 +94,7 @@ module.exports = {
   resolvedquerybyid,
   adduser,
   getuserbyid,
+  getuserbyemail,
   updateuserbyid,
   deleteuserbyid,
   addnews,
