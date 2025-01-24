@@ -1,4 +1,4 @@
-const { runAsync, getAsync, allAsync } = require("./db");
+const { runAsync, getAsync, allAsync } = require("./database_facade");
 
 async function addquery(fullname, mobileno, message) {
   const sql = `INSERT INTO query (fullname, mobileno, message) VALUES (?, ?, ?)`;

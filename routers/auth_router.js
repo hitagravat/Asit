@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-const database = require("./database");
-const utils = require("./utils");
+const database = require("../database/db");
+const utils = require("../utils");
 
 router.post("/signup", async (req, res) => {
   let fullname = req.body.fullname;

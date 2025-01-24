@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const database = require("./database");
+const database = require("../database/db");
 
 // Get all the latest news
 router.get("/", async (req, res) => {

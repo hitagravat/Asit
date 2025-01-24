@@ -6,12 +6,12 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 
 const utils = require("./utils");
-const database = require("./database");
-const auth_router = require("./auth_router");
-const user_router = require("./user_router");
-const query_router = require("./query_router");
-const news_router = require("./news_router");
-const admission_router = require("./admission_router");
+const database = require("./database/db");
+const auth_router = require("./routers/auth_router");
+const user_router = require("./routers/user_router");
+const query_router = require("./routers/query_router");
+const news_router = require("./routers/news_router");
+const admission_router = require("./routers/admission_router");
 const swaggerDocs = require("./swagger");
 
 const app = express();

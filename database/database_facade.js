@@ -3,7 +3,8 @@ const sqlite3 = require('sqlite3').verbose();
 function connect_to_db(dbpath) {
   let db = new sqlite3.Database(dbpath, (err) => {
       if (err) {
-        throw new Error("Failed to connect to the database");
+        console.error(err.message);
+        throw new Error("Failed to connect to the database at: " + dbpath);
       }
       else {
         if (dbpath === ':memory:') {
