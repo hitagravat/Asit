@@ -1,55 +1,139 @@
+require("dotenv").config();
+
 const express = require("express");
+var cookieParser = require('cookie-parser');
 const bodyParser = require("body-parser");
+const cors = require("cors");
 
 const utils = require("./utils");
-const database = require("./database");
-const auth_router = require("./auth_router");
-const user_router = require("./user_router");
-const query_router = require("./query_router");
-const news_router = require("./news_router");
+const database = require("./database/db");
+const auth_router = require("./routers/auth_router");
+const user_router = require("./routers/user_router");
+const query_router = require("./routers/query_router");
+const news_router = require("./routers/news_router");
+const admission_router = require("./routers/admission_router");
+const swaggerDocs = require("./swagger");
 
 const app = express();
+app.use(utils.logger);
+app.use(express.static("demos"));
+// app.use(express.static("public"));
+// app.use("/admin", utils.adminAuth, express.static("admin_only"));
+
+app.use(cors());
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static("demos"));
 
 const PORT = process.env.PORT || 8080;
+if (!process.env.JWT_ACCESS_SECRET || !process.env.ADMIN_EMAIL || !process.env.ADMIN_PASSWORD) {
+  throw new Error("Please set the JWT_ACCESS_SECRET, ADMIN_EMAIL and ADMIN_PASSWORD in .env file");
+}
 
-app.get("/", (req, res) => {
+/**
+ * @openapi
+ * /:
+ *   get:
+ *     summary: Redirect to the index page
+ *     description: Redirects the user to the `index.html` page.
+ *     responses:
+ *       302:
+ *         description: Redirect to the index page.
+ */
+app.get("/", async (req, res) => {
   res.redirect("/index.html");
 });
 
-app.get("/api/health", (req, res) => {
+/**
+ * @openapi
+ * /api/health:
+ *   get:
+ *     summary: Check the service health
+ *     description: Returns a message indicating the service is healthy.
+ *     responses:
+ *       200:
+ *         description: Service is healthy.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Health status message.
+ *                 success:
+ *                   type: boolean
+ *                   description: Indicates if the service is healthy.
+ */
+app.get("/api/health", async (req, res) => {
   res.status(200).json({
     message: "Healthy Service!!",
     success: true,
   });
 });
 
-app.get("/api/profile", (req, res) => {
-  let token = req.cookies?.["access-token"];
-  let user = utils.verifyanddecodetoken(token);
+/**
+ * @openapi
+ * /api/profile:
+ *   get:
+ *     summary: Get the user's profile
+ *     description: Returns the profile of the authenticated user. If the user is not authenticated, redirects to the login page.
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the user's profile.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 result:
+ *                   type: object
+ *                   description: The user's profile data.
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       description: The user's ID.
+ *                     fullname:
+ *                       type: string
+ *                       description: The user's full name.
+ *                     email:
+ *                       type: string
+ *                       description: The user's email address.
+ *                 success:
+ *                   type: boolean
+ *                   description: Indicates if the request was successful.
+ *       302:
+ *         description: Redirects to the login page if the user is not authenticated.
+ */
+app.get("/api/profile", async (req, res) => {
+  let token = req.cookies["access-token"];
 
-  if (user) {
-    user = database.getuserbyid(user.userid);
-    res.json({
-      result: user,
-      success: true,
-    });
-  } else {
-    res.status(401).json({
-      message: "Unauthorized!!",
-      success: false,
-    });
+  if (!token) {
+    return res.redirect("/login.html");
   }
+
+  let user = utils.verifyanddecodetoken(token);
+  if (!user) {
+    res.clearCookie("access-token");
+    return res.redirect("/login.html");
+  }
+
+  user = await database.getuserbyid(user.userid);
+  return res.json({
+    result: user,
+    success: true,
+  });
 });
 
 app.use("/api/auth", auth_router);
 app.use("/api/users", user_router);
 app.use("/api/querys", query_router);
 app.use("/api/news", news_router);
+app.use("/api/admission", admission_router);
 
-app.listen(PORT, () => {
-  console.log("Express server start at port: ", PORT);
-  console.log(`http://localhost:${PORT}`);
+app.listen(PORT, async () => {
+  console.log(`Express server start at: http://localhost:${PORT}`);
+  await swaggerDocs(app, PORT);
+  await database.setup();
+  console.log();
 });
