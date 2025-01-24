@@ -5,7 +5,7 @@ const database = require("../database/db");
 
 /**
  * @openapi
- * /:
+ * /api/admission:
  *   get:
  *     summary: Get all admission requests
  *     description: Retrieve all the admission requests from the database.
@@ -51,7 +51,7 @@ router.get("/", async (req, res) => {
 
 /**
  * @openapi
- * /register:
+ * /api/admission/register:
  *   post:
  *     summary: Create a new admission request
  *     description: Register a new admission request in the database.

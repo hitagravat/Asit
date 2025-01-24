@@ -12,11 +12,7 @@ const OpenApiConfig = {
   },
   apis: [
     "./index.js",
-    "./auth_router.js",
-    "./user_router.js",
-    "./query_router.js",
-    "./news_router.js",
-    "./admission_router.js"
+    "./routers/*.js"
   ]
 }
 

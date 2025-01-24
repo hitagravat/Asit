@@ -25,11 +25,13 @@ const PORT = process.env.PORT || 8080;
 
 /**
  * @openapi
- * '/':
+ * /:
  *   get:
- *     tags:
- *       - Basic/Default
- *     description: returns the home page
+ *     summary: Redirect to the index page
+ *     description: Redirects the user to the `index.html` page.
+ *     responses:
+ *       302:
+ *         description: Redirect to the index page.
  */
 app.get("/", async (req, res) => {
   res.redirect("/index.html");
@@ -37,17 +39,24 @@ app.get("/", async (req, res) => {
 
 /**
  * @openapi
- * 'api/health':
+ * /api/health:
  *   get:
- *     tags:
- *       - Basic/Default
- *     description: a simple health check route
+ *     summary: Check the service health
+ *     description: Returns a message indicating the service is healthy.
  *     responses:
  *       200:
- *         description: retuns a simple message
+ *         description: Service is healthy.
  *         content:
  *           application/json:
  *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Health status message.
+ *                 success:
+ *                   type: boolean
+ *                   description: Indicates if the service is healthy.
  */
 app.get("/api/health", async (req, res) => {
   res.status(200).json({
@@ -58,36 +67,50 @@ app.get("/api/health", async (req, res) => {
 
 /**
  * @openapi
- * 'api/profile':
+ * /api/profile:
  *   get:
- *     tags:
- *       - Users
- *     description: returns the user profile
+ *     summary: Get the user's profile
+ *     description: Returns the profile of the authenticated user. If the user is not authenticated, redirects to the login page.
  *     responses:
  *       200:
- *         description: retuns the user profile
+ *         description: Successfully retrieved the user's profile.
  *         content:
  *           application/json:
  *             schema:
- *       401:
- *         description: unauthorized
- *         content:
- *           application/json:
- *             schema:
+ *               type: object
+ *               properties:
+ *                 result:
+ *                   type: object
+ *                   description: The user's profile data.
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       description: The user's ID.
+ *                     fullname:
+ *                       type: string
+ *                       description: The user's full name.
+ *                     email:
+ *                       type: string
+ *                       description: The user's email address.
+ *                 success:
+ *                   type: boolean
+ *                   description: Indicates if the request was successful.
+ *       302:
+ *         description: Redirects to the login page if the user is not authenticated.
  */
 app.get("/api/profile", async (req, res) => {
   let token = req.cookies["access-token"];
-  
+
   if (!token) {
     return res.redirect("/login.html");
   }
-  
+
   let user = utils.verifyanddecodetoken(token);
   if (!user) {
     res.clearCookie("access-token");
     return res.redirect("/login.html");
   }
-  
+
   user = await database.getuserbyid(user.userid);
   return res.json({
     result: user,
