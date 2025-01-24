@@ -1,5 +1,15 @@
 const jwt = require("jsonwebtoken");
 
+function adminAuth(req, res, next) {
+  const token = req.cookies["access-token"];
+  
+  if (token && token.isadmin === true) {
+    next(); // Allow access
+  } else {
+    res.redirect("/index.html"); // Redirect to login page
+  }
+};
+
 function logger(req, res, next) {
   const start = Date.now();
   next();
@@ -34,6 +44,7 @@ function verifyanddecodetoken(token) {
 }
 
 module.exports = {
+  adminAuth,
   logger,
   generatetoken,
   verifyanddecodetoken

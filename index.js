@@ -18,7 +18,7 @@ const app = express();
 app.use(utils.logger);
 app.use(express.static("demos"));
 // app.use(express.static("public"));
-// app.use("/admin", adminAuth, express.static("admin_only"));
+// app.use("/admin", utils.adminAuth, express.static("admin_only"));
 
 app.use(cors());
 app.use(cookieParser());
