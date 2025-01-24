@@ -25,8 +25,10 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
 const PORT = process.env.PORT || 8080;
+if (!process.env.JWT_ACCESS_SECRET || !process.env.ADMIN_EMAIL || !process.env.ADMIN_PASSWORD) {
+  throw new Error("Please set the JWT_ACCESS_SECRET, ADMIN_EMAIL and ADMIN_PASSWORD in .env file");
+}
 
 /**
  * @openapi

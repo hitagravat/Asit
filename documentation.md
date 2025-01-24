@@ -103,8 +103,8 @@ please edit it to suit your need.
 
 ```
 PORT=8080
-JWT_ACCESS_SECRET=testsecret
-DB_PATH=./mydatabase.sqlite
+DB_PATH=./asitdatabase.sqlite
+JWT_ACCESS_SECRET=
 ADMIN_EMAIL=
 ADMIN_PASSWORD=
 ```
