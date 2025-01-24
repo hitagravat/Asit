@@ -71,12 +71,17 @@ router.post("/signup", async (req, res) => {
 router.post("/login", async (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
+  let isadmin = false;
+  
+  if (email == process.env.ADMIN_EMAIL && password == process.env.ADMIN_PASSWORD) {
+    isadmin = true;
+  }
 
   if (email == "" || password == "") {
     res.redirect("/login.html");
   } else {
     let user = await database.getuserbyemail(email);
-    let token = utils.generatetoken(user.id, user.email);
+    let token = utils.generatetoken(user.id, user.email, isadmin);
 
     if (user && user.password == password) {
       res.cookie("access-token", token);

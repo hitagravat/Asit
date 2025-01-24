@@ -11,11 +11,12 @@ function logger(req, res, next) {
   );
 }
 
-function generatetoken(userid, email) {
+function generatetoken(userid, email, isadmin) {
   return jwt.sign(
     {
       userid,
       email,
+      isadmin
     },
     process.env.JWT_ACCESS_SECRET,
     {
