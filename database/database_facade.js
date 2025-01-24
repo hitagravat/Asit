@@ -1,7 +1,10 @@
 const sqlite3 = require('sqlite3').verbose();
 
-function connect_to_db(dbpath) {
-  let db = new sqlite3.Database(dbpath, (err) => {
+// Get the database path from .env, default to ':memory:' if not provided
+let db = undefined;
+
+async function connect_to_db(dbpath) {
+  database = new sqlite3.Database(dbpath, (err) => {
       if (err) {
         console.error(err.message);
         throw new Error("Failed to connect to the database at: " + dbpath);
@@ -15,10 +18,10 @@ function connect_to_db(dbpath) {
       }
     });
   
-  db.serialize(() => {
+  database.serialize(() => {
     // Create tables
     
-    db.run(`
+    database.run(`
       CREATE TABLE IF NOT EXISTS query(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         fullname TEXT NOT NULL,
@@ -28,7 +31,7 @@ function connect_to_db(dbpath) {
       )
     `);
 
-    db.run(`
+    database.run(`
       CREATE TABLE IF NOT EXISTS user(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         fullname TEXT NOT NULL,
@@ -37,7 +40,7 @@ function connect_to_db(dbpath) {
       )
     `);
 
-    db.run(`
+    database.run(`
       CREATE TABLE IF NOT EXISTS news(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT NOT NULL,
@@ -45,7 +48,7 @@ function connect_to_db(dbpath) {
       )
     `);
 
-    db.run(`
+    database.run(`
       CREATE TABLE IF NOT EXISTS admission(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         fullname TEXT NOT NULL,
@@ -56,7 +59,7 @@ function connect_to_db(dbpath) {
     `);
   });
 
-  return db;
+  return database;
 }
 
 function runAsync(sql, params = []) {
@@ -86,10 +89,12 @@ function allAsync(sql, params = []) {
   });
 }
 
-// Get the database path from .env, default to ':memory:' if not provided
-const db_path = process.env.DB_PATH || ':memory:';
-const db = connect_to_db(db_path);
+async function setupdatabase(db_path) {
+  db = await connect_to_db(db_path);
+}
+
 module.exports = {
+  setupdatabase,
   runAsync,
   getAsync,
   allAsync

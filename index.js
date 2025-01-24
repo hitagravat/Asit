@@ -15,11 +15,16 @@ const admission_router = require("./routers/admission_router");
 const swaggerDocs = require("./swagger");
 
 const app = express();
+app.use(utils.logger);
+app.use(express.static("demos"));
+// app.use(express.static("public"));
+// app.use(express.static("admin_only"));
+
 app.use(cors());
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static("demos"));
+
 
 const PORT = process.env.PORT || 8080;
 
@@ -124,7 +129,9 @@ app.use("/api/querys", query_router);
 app.use("/api/news", news_router);
 app.use("/api/admission", admission_router);
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Express server start at: http://localhost:${PORT}`);
-  swaggerDocs(app, PORT);
+  await swaggerDocs(app, PORT);
+  await database.setup();
+  console.log();
 });

@@ -1,4 +1,9 @@
-const { runAsync, getAsync, allAsync } = require("./database_facade");
+const { setupdatabase, runAsync, getAsync, allAsync } = require("./database_facade");
+
+async function setup() {
+  let db_path = process.env.DB_PATH || ':memory:';
+  await setupdatabase(db_path);
+}
 
 async function addquery(fullname, mobileno, message) {
   const sql = `INSERT INTO query (fullname, mobileno, message) VALUES (?, ?, ?)`;
@@ -85,6 +90,7 @@ async function getadmission() {
 }
 
 module.exports = {
+  setup,
   getusers,
   getquerys,
   getnews,
